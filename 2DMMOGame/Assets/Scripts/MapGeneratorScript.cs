@@ -47,44 +47,44 @@ public class MapGeneratorScript : MonoBehaviour
                 GameObject mapTile = Instantiate(mapTilePrefab, tilePosition, Quaternion.identity);                         
                 mapTile.transform.SetParent(mapTilesParent.transform);
 
-
-                string s = mapData.tiles[Random.Range(0, 7)].type;
+                int chosenTile = Random.Range(0, 7);
+                string s = mapData.tiles[chosenTile].type;
 
                 switch(s)
                 {
-                    case "grass":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[2];
-                        break;
                     case "sand":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[0];
+                        MakeTile(0, mapTile, mapData.tiles[chosenTile]);
                         break;
                     case "water":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[1];
+                        MakeTile(1, mapTile, mapData.tiles[chosenTile]);
+                        break;
+                    case "grass":
+                        MakeTile(2, mapTile, mapData.tiles[chosenTile]);
                         break;
                     case "trees1":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[3];
+                        MakeTile(3, mapTile, mapData.tiles[chosenTile]);
                         break;
                     case "trees2":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[4];
+                        MakeTile(4, mapTile, mapData.tiles[chosenTile]);
                         break;
                     case "house1":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[5];
+                        MakeTile(5, mapTile, mapData.tiles[chosenTile]);
                         break;
                     case "house2":
-                        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[6];
+                        MakeTile(6, mapTile, mapData.tiles[chosenTile]);
                         break;
                 }
-
-                //mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[Random.Range(0, 7)];
-
-                TileData tileData = mapTile.GetComponent<TileData>();
             }
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void MakeTile(int graphicsID, GameObject mapTile, Tiles parsedTilesData)
     {
-        
+        mapTile.GetComponent<SpriteRenderer>().sprite = mapTilesGraphics[graphicsID];
+        TileData tileData = mapTile.GetComponent<TileData>();
+        tileData.Name = parsedTilesData.name;
+        tileData.Level = parsedTilesData.level;
+        tileData.Type = parsedTilesData.type;
+
     }
 }

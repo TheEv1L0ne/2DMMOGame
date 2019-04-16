@@ -11,12 +11,18 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        width = (float)Screen.width / 2.0f;
-        height = (float)Screen.height / 2.0f;
+        width = (float)Screen.width;
+        height = (float)Screen.height;
+
+        Debug.Log("WIDTH: " + width);
+        Debug.Log("HEIGHT: " + height);
 
         // Position used for the cube.
         position = new Vector3(0.0f, 0.0f, 0.0f);
     }
+
+    Vector3 startTouchPositionUC; //UC - Unity Coordinates
+    Vector3 movingTouchPositionUC;
 
     // Update is called once per frame
     void Update()
@@ -25,15 +31,22 @@ public class CameraController : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
+
+            if (touch.phase == TouchPhase.Began)
+            {
+
+                //This is position in unity coordinates when touch on mobile devices occures
+                startTouchPositionUC = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 0f));
+
+            }
+
             if (touch.phase == TouchPhase.Moved)
             {
-                Vector2 pos = touch.position;
+                //Coordinates of touch while moving
+                movingTouchPositionUC = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, 0f));
 
-                pos.x = (pos.x - width) / width;
-                pos.y = (pos.y - height) / height;
-                position = new Vector3(-pos.x, pos.y, 0.0f);
-
-                transform.position = Camera.main.ScreenToWorldPoint(new Vector3(position.x, position.y, transform.position.z));
+                //Camera should move for same distance as touch moved from its first click     
+                transform.position = transform.position + (startTouchPositionUC - movingTouchPositionUC);
             }
         }
     }

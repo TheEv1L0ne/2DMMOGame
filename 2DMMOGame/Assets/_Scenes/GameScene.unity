@@ -374,6 +374,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff4e7c65de9f684bb0f7030d9af0314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  orthoZoomSpeed: 0.05
+  minOrthographicSize: 3
+  maxOrthographicSize: 8
 --- !u!1 &1282712314
 GameObject:
   m_ObjectHideFlags: 0

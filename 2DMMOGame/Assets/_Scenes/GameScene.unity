@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grass: {fileID: 21300000, guid: 50549ccbd244f334fa31ff79e73d0f0f, type: 3}
+  noOfHouses: {fileID: 1838298518}
 --- !u!1 &781952653
 GameObject:
   m_ObjectHideFlags: 0

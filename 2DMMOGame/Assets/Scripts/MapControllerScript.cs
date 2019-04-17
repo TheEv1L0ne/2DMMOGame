@@ -1,38 +1,50 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapControllerScript : MonoBehaviour
 {
 
-    public Sprite grass;
+    public Sprite grass; //image of grass to replace house when destroyed
+    public Text noOfHouses; //number of houses UI
+    int noOfH; //number of houses
 
-    List<GameObject> tiles;
+    List<GameObject> tiles; //list tiles
 
-    int lastOpenedTile = -1;
+    int lastOpenedTile = -1; 
 
     private void Start()
     {
         tiles = new List<GameObject>();
     }
 
-
+    //Adds tile to list and sets its ID 
+    //since tiles are not deleted from list at any point ID is equal tiles.Count - 1
     public void AddTileToList(GameObject tile)
     {
         this.tiles.Add(tile);
         tile.GetComponent<TileData>().TileID = tiles.Count - 1;
     }
 
+    //Sets number of houses from MapGeneratorScript
+    public void SetNoOfHauses(int x)
+    {
+        noOfH = x;
+    }
 
+    //Opens a tile with give ID
     void OpenTile(int id)
     {
+        //gets data for that tile
         TileData data = tiles[id].GetComponent<TileData>();
 
+        //Sets active info window
         tiles[id].transform.GetChild(0).gameObject.SetActive(true);
         tiles[id].transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = data.Name;
+        //in case it is any type of house shows its level and button for destruction
         if (data.Type == "house1" || data.Type == "house2")
         {
-            tiles[id].transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = data.Name;
             tiles[id].transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
             tiles[id].transform.GetChild(0).GetChild(1).GetComponent<TextMesh>().text = "Level " + data.Level;
             tiles[id].transform.GetChild(0).GetChild(2).gameObject.SetActive(true);
@@ -44,6 +56,7 @@ public class MapControllerScript : MonoBehaviour
         }
     }
 
+    //Closes house with given ID
     void CloseTile(int id)
     {
         tiles[id].transform.GetChild(0).gameObject.SetActive(false);
@@ -54,11 +67,13 @@ public class MapControllerScript : MonoBehaviour
 
     private void Update()
     {
+        //Sets location of curent click
         if (Input.GetMouseButtonDown(0))
         {
             currentClickPosition = Input.mousePosition;
         }
 
+        //checks if user didnt drag/scroll map
         if(Input.GetMouseButton(0))
         {
             if (Input.mousePosition != currentClickPosition)
@@ -73,6 +88,7 @@ public class MapControllerScript : MonoBehaviour
 
             //Debug.Log("TAG: " + hit.collider.tag);
 
+            //if any tile is clicked
             if (hit.collider.tag == "Tile" && !isDragging)
             {
                 if (lastOpenedTile == -1) //nothing is open
@@ -93,6 +109,8 @@ public class MapControllerScript : MonoBehaviour
                 }
             }
 
+            //if button is clicked deletes house on that tile position and change it to grass
+            //also sets all data for grass
             if(hit.collider.tag == "Button")
             {
                 //Debug.Log("BUTTON");
@@ -108,6 +126,9 @@ public class MapControllerScript : MonoBehaviour
                     data.Name = "Empty Tile";
                     CloseTile(data.TileID);
                     lastOpenedTile = -1;
+
+                    noOfHouses.text = "Number of houses: " + (noOfH-=1);
+
                     //finsih data
                 }
             }

@@ -25,10 +25,10 @@ public class CameraController : MonoBehaviour
 
     public MapGeneratorScript mgs;
 
-    private void Start()
-    {
+    //private void Start()
+    //{
 
-    }
+    //}
 
     public void SetAreaBounds()
     {
@@ -135,6 +135,8 @@ public class CameraController : MonoBehaviour
                 y = Mathf.Clamp(y, mapBoundriesYNegative, mapBoundriesYPositive);
 
                 transform.position = new Vector3(x, y, -10f);
+
+                mgs.makeTiles();
 
             }
         }

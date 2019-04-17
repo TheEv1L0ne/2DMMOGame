@@ -12,13 +12,30 @@ public class CameraController : MonoBehaviour
     Vector3 startTouchPositionUC; //UC - Unity Coordinates
     Vector3 movingTouchPositionUC;
 
-    float areaSize = 9.5f; //this should be provided from JSON at some point
+    float areaSize = 20f; //this should be provided from JSON at some point
+    float areaMin;
+    float areaMax;
+
 
     float mapBoundriesXPositive;
     float mapBoundriesXNegative;
 
     float mapBoundriesYPositive;
     float mapBoundriesYNegative;
+
+    private void Start()
+    {
+        if(areaSize % 2 == 0)
+        {
+            areaMax = areaSize / 2 - 0.5f;
+            areaMin = areaSize / 2 + 0.5f;
+        }
+        else
+        {
+            areaMax = (areaSize-1) / 2 + 0.5f;
+            areaMin = (areaSize-1) / 2 + 0.5f;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -39,11 +56,11 @@ public class CameraController : MonoBehaviour
 
                 //calculates max and min position of camera where camere can move in unity coordinates based on camera size
                 //cause camera size can change based on zoom in/out
-                mapBoundriesXPositive = areaSize - Camera.main.orthographicSize * Camera.main.aspect;
-                mapBoundriesXNegative = -areaSize + Camera.main.orthographicSize * Camera.main.aspect;
+                mapBoundriesXPositive = areaMax - Camera.main.orthographicSize * Camera.main.aspect;
+                mapBoundriesXNegative = -areaMin + Camera.main.orthographicSize * Camera.main.aspect;
 
-                mapBoundriesYPositive = areaSize - Camera.main.orthographicSize;
-                mapBoundriesYNegative = -areaSize + Camera.main.orthographicSize;
+                mapBoundriesYPositive = areaMax - Camera.main.orthographicSize;
+                mapBoundriesYNegative = -areaMin + Camera.main.orthographicSize;
             }
 
             //On touch moved
@@ -99,11 +116,11 @@ public class CameraController : MonoBehaviour
                 float x = transform.position.x;
                 float y = transform.position.y;
 
-                mapBoundriesXPositive = areaSize - Camera.main.orthographicSize * Camera.main.aspect;
-                mapBoundriesXNegative = -areaSize + Camera.main.orthographicSize * Camera.main.aspect;
+                mapBoundriesXPositive = areaMax - Camera.main.orthographicSize * Camera.main.aspect;
+                mapBoundriesXNegative = -areaMin + Camera.main.orthographicSize * Camera.main.aspect;
 
-                mapBoundriesYPositive = areaSize - Camera.main.orthographicSize;
-                mapBoundriesYNegative = -areaSize + Camera.main.orthographicSize;
+                mapBoundriesYPositive = areaMax - Camera.main.orthographicSize;
+                mapBoundriesYNegative = -areaMin + Camera.main.orthographicSize;
 
                 x = Mathf.Clamp(x, mapBoundriesXNegative, mapBoundriesXPositive);
                 y = Mathf.Clamp(y, mapBoundriesYNegative, mapBoundriesYPositive);

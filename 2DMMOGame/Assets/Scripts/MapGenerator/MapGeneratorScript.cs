@@ -16,6 +16,8 @@ public class MapGeneratorScript : MonoBehaviour
 
     public Text numberOfHousesText;
 
+    public MapControllerScript mapControllerScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -85,6 +87,8 @@ public class MapGeneratorScript : MonoBehaviour
         tileData.Name = parsedTilesData.name;
         tileData.Level = parsedTilesData.level;
         tileData.Type = parsedTilesData.type;
+
+        mapControllerScript.AddTileToList(mapTile);
 
     }
 }

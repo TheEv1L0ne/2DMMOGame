@@ -65,6 +65,8 @@ public class MapControllerScript : MonoBehaviour
     bool isDragging = false;
     Vector3 currentClickPosition;
 
+    RaycastHit hit;
+
     private void Update()
     {
         //Sets location of curent click
@@ -78,58 +80,65 @@ public class MapControllerScript : MonoBehaviour
         {
             if (Input.mousePosition != currentClickPosition)
             {
+                //Debug.Log("MOVED!");
                 isDragging = true;
             }
         }
 
         if(Input.GetMouseButtonUp(0))
         {
-            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), -Vector2.up);
+            Vector3 pointOfClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Debug.Log("TAG: " + pointOfClick);
+            pointOfClick.z = -5f;
+            
 
             //Debug.Log("TAG: " + hit.collider.tag);
+            if (Physics.Raycast(pointOfClick, Vector3.forward, out hit))
 
-            //if any tile is clicked
-            if (hit.collider.tag == "Tile" && !isDragging)
             {
-                if (lastOpenedTile == -1) //nothing is open
+                //if any tile is clicked
+                if (hit.collider.tag == "Tile" && !isDragging)
                 {
-                    OpenTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
-                    lastOpenedTile = hit.collider.gameObject.GetComponent<TileData>().TileID;
+                    if (lastOpenedTile == -1) //nothing is open
+                    {
+                        OpenTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
+                        lastOpenedTile = hit.collider.gameObject.GetComponent<TileData>().TileID;
+                    }
+                    else if (lastOpenedTile == hit.collider.gameObject.GetComponent<TileData>().TileID) //click on open tile
+                    {
+                        CloseTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
+                        lastOpenedTile = -1;
+                    }
+                    else //closing last opened tile and opening new
+                    {
+                        CloseTile(lastOpenedTile);
+                        OpenTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
+                        lastOpenedTile = hit.collider.gameObject.GetComponent<TileData>().TileID;
+                    }
                 }
-                else if(lastOpenedTile == hit.collider.gameObject.GetComponent<TileData>().TileID) //click on open tile
+
+                //if button is clicked deletes house on that tile position and change it to grass
+                //also sets all data for grass
+                if (hit.collider.tag == "Button")
                 {
-                    CloseTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
-                    lastOpenedTile = -1;
-                }
-                else //closing last opened tile and opening new
-                {
-                    CloseTile(lastOpenedTile);
-                    OpenTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
-                    lastOpenedTile = hit.collider.gameObject.GetComponent<TileData>().TileID;
-                }
-            }
+                    //Debug.Log("BUTTON");
+                    GameObject buttonParent = hit.collider.transform.parent.parent.gameObject;
+                    TileData data = buttonParent.GetComponent<TileData>();
+                    //Debug.Log(data.Type);
+                    if (data.Type == "house1" || data.Type == "house2") //it is house and it needs to be demolished!
+                    {
 
-            //if button is clicked deletes house on that tile position and change it to grass
-            //also sets all data for grass
-            if(hit.collider.tag == "Button")
-            {
-                //Debug.Log("BUTTON");
-                GameObject buttonParent = hit.collider.transform.parent.parent.gameObject;
-                TileData data = buttonParent.GetComponent<TileData>();
-                //Debug.Log(data.Type);
-                if(data.Type == "house1" || data.Type == "house2") //it is house and it needs to be demolished!
-                {
+                        buttonParent.GetComponent<SpriteRenderer>().sprite = grass;
+                        data.Type = "grass";
+                        data.Level = null;
+                        data.Name = "Empty Tile";
+                        CloseTile(data.TileID);
+                        lastOpenedTile = -1;
 
-                    buttonParent.GetComponent<SpriteRenderer>().sprite = grass;
-                    data.Type = "grass";
-                    data.Level = null;
-                    data.Name = "Empty Tile";
-                    CloseTile(data.TileID);
-                    lastOpenedTile = -1;
+                        noOfHouses.text = "Number of houses: " + (noOfH -= 1);
 
-                    noOfHouses.text = "Number of houses: " + (noOfH-=1);
-
-                    //finsih data
+                        //finsih data
+                    }
                 }
             }
 

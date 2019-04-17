@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     Vector3 startTouchPositionUC; //UC - Unity Coordinates
     Vector3 movingTouchPositionUC;
 
-    float areaSize = 20f; //this should be provided from JSON at some point
+    public float areaSize = 90f;
     float areaMin;
     float areaMax;
 
@@ -23,17 +23,24 @@ public class CameraController : MonoBehaviour
     float mapBoundriesYPositive;
     float mapBoundriesYNegative;
 
+    public MapGeneratorScript mgs;
+
     private void Start()
     {
-        if(areaSize % 2 == 0)
+
+    }
+
+    public void SetAreaBounds()
+    {
+        if (areaSize % 2 == 0)
         {
             areaMax = areaSize / 2 - 0.5f;
             areaMin = areaSize / 2 + 0.5f;
         }
         else
         {
-            areaMax = (areaSize-1) / 2 + 0.5f;
-            areaMin = (areaSize-1) / 2 + 0.5f;
+            areaMax = (areaSize - 1) / 2 + 0.5f;
+            areaMin = (areaSize - 1) / 2 + 0.5f;
         }
     }
 
@@ -86,6 +93,8 @@ public class CameraController : MonoBehaviour
 
                 //Finally set new camera position
                 transform.position = new Vector3(x, y, -10f);
+
+                mgs.makeTiles();
             }
         }
 

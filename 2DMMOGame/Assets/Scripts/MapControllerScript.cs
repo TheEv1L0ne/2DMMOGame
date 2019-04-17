@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MapControllerScript : MonoBehaviour
 {
+
+    public Sprite grass;
+
     List<GameObject> tiles;
 
     int lastOpenedTile = -1;
@@ -23,8 +26,22 @@ public class MapControllerScript : MonoBehaviour
 
     void OpenTile(int id)
     {
+        TileData data = tiles[id].GetComponent<TileData>();
+
         tiles[id].transform.GetChild(0).gameObject.SetActive(true);
-        tiles[id].transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = name; //SET NAME AND LVL
+        tiles[id].transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = data.Name;
+        if (data.Type == "house1" || data.Type == "house2")
+        {
+            tiles[id].transform.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = data.Name;
+            tiles[id].transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+            tiles[id].transform.GetChild(0).GetChild(1).GetComponent<TextMesh>().text = "Level " + data.Level;
+            tiles[id].transform.GetChild(0).GetChild(2).gameObject.SetActive(true);
+        }
+        else
+        {
+            tiles[id].transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+            tiles[id].transform.GetChild(0).GetChild(2).gameObject.SetActive(false);
+        }
     }
 
     void CloseTile(int id)
@@ -53,6 +70,9 @@ public class MapControllerScript : MonoBehaviour
         if(Input.GetMouseButtonUp(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), -Vector2.up);
+
+            //Debug.Log("TAG: " + hit.collider.tag);
+
             if (hit.collider.tag == "Tile" && !isDragging)
             {
                 if (lastOpenedTile == -1) //nothing is open
@@ -70,6 +90,25 @@ public class MapControllerScript : MonoBehaviour
                     CloseTile(lastOpenedTile);
                     OpenTile(hit.collider.gameObject.GetComponent<TileData>().TileID);
                     lastOpenedTile = hit.collider.gameObject.GetComponent<TileData>().TileID;
+                }
+            }
+
+            if(hit.collider.tag == "Button")
+            {
+                //Debug.Log("BUTTON");
+                GameObject buttonParent = hit.collider.transform.parent.parent.gameObject;
+                TileData data = buttonParent.GetComponent<TileData>();
+                //Debug.Log(data.Type);
+                if(data.Type == "house1" || data.Type == "house2") //it is house and it needs to be demolished!
+                {
+
+                    buttonParent.GetComponent<SpriteRenderer>().sprite = grass;
+                    data.Type = "grass";
+                    data.Level = null;
+                    data.Name = "Empty Tile";
+                    CloseTile(data.TileID);
+                    lastOpenedTile = -1;
+                    //finsih data
                 }
             }
 

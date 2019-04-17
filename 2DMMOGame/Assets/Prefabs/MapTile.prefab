@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3717999961001828463}
   - component: {fileID: 3808753304478434560}
   m_Layer: 0
-  m_Name: GameObject (2)
+  m_Name: ButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 982459579417629079}
   - component: {fileID: 9061631404817370209}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: TileLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 6373747418030304531}
   - component: {fileID: 2419839750025640309}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: TileNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,7 +338,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6402410544635885717}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0247, y: -0.3137, z: 0}
+  m_LocalPosition: {x: -0.0247, y: -0.3137, z: -0.03}
   m_LocalScale: {x: 0.6818352, y: 0.26874658, z: 1}
   m_Children:
   - {fileID: 2854126651070027840}
@@ -431,8 +431,8 @@ GameObject:
   - component: {fileID: 1192917147479505812}
   - component: {fileID: 1698114723584981128}
   m_Layer: 0
-  m_Name: New Sprite
-  m_TagString: Untagged
+  m_Name: Background
+  m_TagString: BackgroundTest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
